@@ -25,3 +25,7 @@ xF RD = xF LU
 yF RD = −yF LU
 zF RD = −zF LU
 
+Hardware-In-the-Loop System 
+At this point the two necessary data streams, plus the static transforms, are available as ROS 2 topics. The next step is ensuring the time synchronization of all the nodes with the /clock topic generated from Gazebo, this is also handled through the ROS 2-gz bridge, configured as specified in the launch_test package. Within the spark-fast-lio package the  
+
+
