@@ -1,4 +1,4 @@
-<h1 align="center">HIL-SLAM: Hardware-In-The-Loop 3D LiDAR SLAM with FAST-LIO 2 and PX4</h1>
+<h1 align="center">Hardware-In-The-Loop 3D LiDAR SLAM with FAST-LIO 2 and PX4</h1>
 
 <p align="center">
   <a href="https://docs.ros.org/en/jazzy/"><img alt="ROS 2 Jazzy" src="https://img.shields.io/badge/ROS_2-Jazzy-22314E?logo=ros&logoColor=white"></a>
@@ -31,6 +31,10 @@ https://github.com/user-attachments/assets/f9c53bc0-b842-4c4d-bcaa-70fb8c3c75a0
   - [2. PX4 ↔ ROS 2 Communication](#2-setting-up-px4--ros-2-communication)
   - [3. System Startup](#3-system-startup)
   - [4. Optional: KISS-Matcher Node](#4-optional-kiss-matcher-node)
+- [Experimental Validation](#experimental-validation)
+  - [Objectives](#objectives)
+  - [Expected Behavior](#expected-behavior)
+  - [Long-Duration Flight Test](#long-duration-flight-test)
 
 ---
 
@@ -204,3 +208,46 @@ ros2 launch kiss_matcher_ros rviz.launch.yaml odom_topic:=/odometry scan_topic:=
 
 > [!WARNING]
 > Running KISS-Matcher on the Jetson causes the system to crash, because the Jetson's computational resources are not sufficient to run the SLAM node and the KISS-Matcher node together.
+
+---
+
+## Experimental Validation
+
+### Objectives
+
+The goal of this phase of the experimentation is to verify that the ROS 2 node running the FAST-LIO 2 algorithm is able to:
+
+- receive the data from the simulation;
+- accurately compute the drone's odometry while it is moving;
+- correctly compute the drone's transforms with respect to the `odom` reference frame, located at the vehicle's initial position;
+- periodically save the scan points inserted into the map to PCD files.
+
+The tests use the configuration described in this guide. The results are verified with the same tools used previously: the ROS 2 visualizer RViz and the tf2 frame tree.
+
+### Expected Behavior
+
+The system is expected to produce a topic containing the points of each scan registered in the map, and a drone body frame that replicates the movements performed by the drone in the simulation with respect to the `odom` frame. In RViz, the following elements should be visible:
+
+| Element | Color | Description |
+|---|---|---|
+| Registered map points | Pink | History of the points inserted into the map |
+| Current LiDAR scan | White | Points of the scan currently being received |
+| Flight trajectory | Green | Path of the drone built from the poses estimated by FAST-LIO 2 |
+
+The trajectory and the current LiDAR scan become even clearer when the visualization of the map points is turned off.
+
+To verify that all the transforms are published correctly, the tf2 frame tree can be inspected. It should show the non-static transforms, published by the SLAM node, between the `odom` frame and the robot's base frame.
+
+### Long-Duration Flight Test
+
+Once these results were obtained, the next phase of the experimentation verified that the SLAM algorithm also works during a flight lasting several minutes, along a perfectly straight trajectory at a speed of 3 m/s. The purpose was to check whether, because of the accumulation of inaccuracies in the individual odometry estimates, the trajectory reconstructed by FAST-LIO 2 deviated from the one in the simulation.
+
+This test clearly highlighted the limitations of the on-board computer, and it was during this phase that the sensor resolution value was refined:
+
+| Horizontal LiDAR resolution | Observed behavior | Cause |
+|---|---|---|
+| Above 200 rays | Clear drift of the estimated pose, accumulating until the trajectory becomes almost circular and completely different from the real one | The map point density is too high for the on-board computer to process quickly enough to keep the algorithm running |
+| Between 150 and 200 rays | Drift disappears completely | Point density is within the computational capacity of the on-board computer |
+| Below 150 rays | Drift reappears | Not enough points to extract the features of the surrounding environment |
+
+At the end of this series of tests, the flight trajectory obtained from the poses estimated by FAST-LIO 2 is found to overlap the trajectory of the drone in the simulation, as shown by the ground control station (QGroundControl).
