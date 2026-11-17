@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="x500_lidar_3d_full_0">
+
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0.24" rpy="0 0 0"/>
+      <mass value="2.0"/>
+      <inertia ixx="0.02166666666666667" ixy="0" ixz="0" iyy="0.02166666666666667" iyz="0" izz="0.04000000000000001"/>
+    </inertial>
+    
+    <visual name="base_link_visual">
+      <origin xyz="0 0 0.265" rpy="0 0 3.141592654"/>
+      <geometry>
+        <mesh filename="package://launch_test/meshes/NXP-HGD-CF.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+
+    <collision name="base_link_collision_0">
+      <origin xyz="0 0 0.247" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.35355339059327373 0.35355339059327373 0.05"/>
+      </geometry>
+    </collision>
+    
+    </link>
+
+  <link name="rotor_0">
+    <inertial>
+      <mass value="0.016076923076923075"/>
+      <inertia ixx="3.8464910483993325e-07" ixy="0" ixz="0" iyy="2.6115851691700804e-05" iyz="0" izz="2.649858234714004e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.022 -0.14638 -0.016" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://launch_test/meshes/1345_prop_ccw.stl" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="rotor_0_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rotor_0"/>
+    <origin xyz="0.174 -0.174 0.3" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="rotor_1">
+    <inertial>
+      <mass value="0.016076923076923075"/>
+      <inertia ixx="3.8464910483993325e-07" ixy="0" ixz="0" iyy="2.6115851691700804e-05" iyz="0" izz="2.649858234714004e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.022 -0.14638 -0.016" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://launch_test/meshes/1345_prop_ccw.stl" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="rotor_1_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rotor_1"/>
+    <origin xyz="-0.174 0.174 0.3" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="rotor_2">
+    <inertial>
+      <mass value="0.016076923076923075"/>
+      <inertia ixx="3.8464910483993325e-07" ixy="0" ixz="0" iyy="2.6115851691700804e-05" iyz="0" izz="2.649858234714004e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.022 -0.14638 -0.016" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://launch_test/meshes/1345_prop_cw.stl" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="rotor_2_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rotor_2"/>
+    <origin xyz="0.174 0.174 0.3" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="rotor_3">
+    <inertial>
+      <mass value="0.016076923076923075"/>
+      <inertia ixx="3.8464910483993325e-07" ixy="0" ixz="0" iyy="2.6115851691700804e-05" iyz="0" izz="2.649858234714004e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.022 -0.14638 -0.016" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://launch_test/meshes/1345_prop_cw.stl" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="rotor_3_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rotor_3"/>
+    <origin xyz="-0.174 -0.174 0.3" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="x500_lidar_3d_full_0/hesai_lidar/lidar">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://launch_test/meshes/xt32.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.05 0.05 0.05"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="hesai_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="x500_lidar_3d_full_0/hesai_lidar/lidar"/>
+    <origin xyz="0.0 0 0.3" rpy="0 0 0"/>
+  </joint>
+
+</robot>

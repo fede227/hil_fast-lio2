@@ -1,0 +1,27 @@
+launch:
+
+  - arg: {name: start_rviz, default: 'true', description: automatically start rviz}
+  - arg: {name: scene_id,   default: 'test', description: 'Scene name for input message topics'}
+  - arg: {name: robot_name, default: 'x500', description: 'The actual robot used when acquiring data'}
+
+  # Frames
+  - arg: {name: map_frame, default: 'odom'}
+  - arg: {name: base_frame, default: 'base_link'}
+
+  - arg: {name: rviz_path, default: $(find-pkg-share spark_fast_lio)/rviz/velodyne_mit.rviz}
+  - arg: {name: config_path, default: $(find-pkg-share spark_fast_lio)/config/velodyne_mit.yaml}
+  
+  - node:
+      if: $(var start_rviz)
+      pkg: rviz2
+      exec: rviz2
+      name: rviz
+      output: screen
+      args: -d $(var rviz_path)
+      param:
+        - name: "use_sim_time"
+          value: True
+
+
+
+  
